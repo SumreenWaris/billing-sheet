@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Billing Sheet</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f4f4f4;
+        }
+
+        #billing-container {
+            background-color: #fff;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            width: 100%;
+            border-radius: 8px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        input {
+            width: calc(100% - 16px);
+            padding: 8px;
+            margin-bottom: 10px;
+            box-sizing: border-box;
+        }
+
+        button {
+            background-color: #4caf50;
+            color: #fff;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        #total {
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div id="billing-container">
+        <h2>Billing Sheet</h2>
+        <form id="billing-form">
+            <label for="itemName">Item:</label>
+            <input type="text" id="itemName" placeholder="Item name" required>
+
+            <label for="quantity">Quantity:</label>
+            <input type="number" id="quantity" placeholder="Quantity" required>
+
+            <label for="price">Price:</label>
+            <input type="number" id="price" placeholder="Price" step="0.01" required>
+
+            <button type="button" onclick="addItem()">Add Item</button>
+        </form>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Item</th>
+                    <th>Quantity</th>
+                    <th>Price</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+            <tbody id="billing-body"></tbody>
+        </table>
+
+        <div id="total">Total: $<span id="totalAmount">0.00</span></div>
+    </div>
+
+    <script>
+        function addItem() {
+            var itemName = document.getElementById('itemName').value;
+            var quantity = parseFloat(document.getElementById('quantity').value);
+            var price = parseFloat(document.getElementById('price').value);
+
+            if (itemName && !isNaN(quantity) && !isNaN(price) && quantity > 0 && price > 0) {
+                var total = quantity * price;
+
+                var tableBody = document.getElementById('billing-body');
+                var newRow = tableBody.insertRow(tableBody.rows.length);
+
+                var cell1 = newRow.insertCell(0);
+                var cell2 = newRow.insertCell(1);
+                var cell3 = newRow.insertCell(2);
+                var cell4 = newRow.insertCell(3);
+
+                cell1.innerHTML = itemName;
+                cell2.innerHTML = quantity;
+                cell3.innerHTML = '$' + price.toFixed(2);
+                cell4.innerHTML = '$' + total.toFixed(2);
+
+                updateTotal();
+                resetForm();
+            } else {
+                alert('Please enter valid values for quantity and price.');
+            }
+        }
+
+        function updateTotal() {
+            var totalAmount = 0;
+            var rows = document.getElementById('billing-body').rows;
+
+            for (var i = 0; i < rows.length; i++) {
+                totalAmount += parseFloat(rows[i].cells[3].innerHTML.replace('$', ''));
+            }
+
+            document.getElementById('totalAmount').innerHTML = totalAmount.toFixed(2);
+        }
+
+        function resetForm() {
+            document.getElementById('itemName').value = '';
+            document.getElementById('quantity').value = '';
+            document.getElementById('price').value = '';
+        }
+    </script>
+</body>
+</html>
